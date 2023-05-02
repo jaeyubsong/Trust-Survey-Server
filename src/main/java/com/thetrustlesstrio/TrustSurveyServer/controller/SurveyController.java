@@ -1,13 +1,22 @@
 package com.thetrustlesstrio.TrustSurveyServer.controller;
 
+import com.thetrustlesstrio.TrustSurveyServer.Survey;
+import com.thetrustlesstrio.TrustSurveyServer.SurveyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 public class SurveyController {
+
+    @Autowired
+    private SurveyRepository surveyRepo;
 
     @GetMapping("test")
     public String Test(Model model) {
@@ -36,6 +45,23 @@ public class SurveyController {
         Test test = new Test();
         test.setName(name);
         return test; // JSON API
+    }
+
+    @GetMapping("mongo/test")
+    @ResponseBody
+    public List<Survey> mongoTest() {
+        surveyRepo.deleteAll();
+
+        surveyRepo.save(new Survey("test purpose1", 100));
+        surveyRepo.save(new Survey("test purpose2", 200));
+
+        return surveyRepo.findAll();
+    }
+
+    @GetMapping("mongo/survey")
+    @ResponseBody
+    public Optional<Survey> getSurvey(@RequestParam("id") String id) {
+        return surveyRepo.findById(id);
     }
 
 

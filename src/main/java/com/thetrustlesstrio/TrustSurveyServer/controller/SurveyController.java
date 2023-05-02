@@ -26,7 +26,7 @@ public class SurveyController {
     @GetMapping("test-string")
     @ResponseBody
     public String testString(@RequestParam("name") String name) {
-        http://localhost:8080/test-string?name=trio
+        // http://localhost:8080/test-string?name=trio
         return "Test " + name; // Raw string
     }
 

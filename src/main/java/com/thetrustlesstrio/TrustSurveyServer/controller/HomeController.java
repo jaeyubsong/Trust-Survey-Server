@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        http://localhost:8080/
+        // http://localhost:8080/
         return "home"; // home.html
     }
 

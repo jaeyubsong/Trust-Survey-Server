@@ -2,6 +2,8 @@ package com.thetrustlesstrio.TrustSurveyServer.controller;
 
 import com.thetrustlesstrio.TrustSurveyServer.Survey;
 import com.thetrustlesstrio.TrustSurveyServer.SurveyRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "Survey Controller", description = "Survey 관련 컨트롤러")
 @Controller
 public class SurveyController {
 
@@ -47,6 +50,7 @@ public class SurveyController {
         return test; // JSON API
     }
 
+    @Operation(summary = "mongo test", description = "Survey 2개를 Write 해보는 테스트 API")
     @GetMapping("mongo/test")
     @ResponseBody
     public List<Survey> mongoTest() {

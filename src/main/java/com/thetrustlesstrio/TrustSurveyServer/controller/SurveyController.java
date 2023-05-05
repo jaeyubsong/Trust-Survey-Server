@@ -1,15 +1,15 @@
 package com.thetrustlesstrio.TrustSurveyServer.controller;
 
+import com.thetrustlesstrio.TrustSurveyServer.RegisterSurveyDto;
 import com.thetrustlesstrio.TrustSurveyServer.Survey;
 import com.thetrustlesstrio.TrustSurveyServer.SurveyRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,24 +50,26 @@ public class SurveyController {
         return test; // JSON API
     }
 
-    @Operation(summary = "mongo test", description = "Survey 2개를 Write 해보는 테스트 API")
-    @GetMapping("mongo/test")
+    @GetMapping("survey")
     @ResponseBody
-    public List<Survey> mongoTest() {
-        surveyRepo.deleteAll();
-
-        surveyRepo.save(new Survey("test purpose1", 100));
-        surveyRepo.save(new Survey("test purpose2", 200));
-
+    public List<Survey> listSurvey() {
         return surveyRepo.findAll();
     }
-
-    @GetMapping("mongo/survey")
+    @GetMapping(value = "survey", params = "id")
     @ResponseBody
     public Optional<Survey> getSurvey(@RequestParam("id") String id) {
         return surveyRepo.findById(id);
     }
 
+    @Operation(summary = "register single survey", description = "새로운 Survey 를 등록하는 API")
+    @PostMapping("survey")
+    @ResponseBody
+    public Survey registerSurvey(@RequestBody @Valid RegisterSurveyDto reqBody) {
+        // TODO: requested user should be recorded in Survey object as 'publisher'(?)
+        Survey survey = new Survey(reqBody);
+        surveyRepo.save(survey);
+        return survey;
+    }
 
     static class Test {
         private String name;

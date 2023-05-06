@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,35 +19,6 @@ public class SurveyController {
 
     @Autowired
     private SurveyRepository surveyRepo;
-
-    @GetMapping("test")
-    public String Test(Model model) {
-        // http://localhost:8080/test
-        model.addAttribute("data", "Test!!");
-        return "test"; // test.html
-    }
-
-    @GetMapping("test-mvc")
-    public String testMvc(@RequestParam(value = "name") String name, Model model) {
-        // http://localhost:8080/test-mvc?name=trio
-        model.addAttribute("name", name);
-        return "test-template"; // test-template.html
-    }
-
-    @GetMapping("test-string")
-    @ResponseBody
-    public String testString(@RequestParam("name") String name) {
-        // http://localhost:8080/test-string?name=trio
-        return "Test " + name; // Raw string
-    }
-
-    @GetMapping("test-api")
-    @ResponseBody
-    public Test testApi(@RequestParam("name") String name) {
-        Test test = new Test();
-        test.setName(name);
-        return test; // JSON API
-    }
 
     @Operation(summary = "get all surveys", description = "등록된 모든 survey를 받아오는 API. 아직은 유저 별로 다르게 보여주는 기능은 없음.")
     @GetMapping("survey")
@@ -71,17 +41,5 @@ public class SurveyController {
         Survey survey = new Survey(reqBody);
         surveyRepo.save(survey);
         return survey;
-    }
-
-    static class Test {
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }

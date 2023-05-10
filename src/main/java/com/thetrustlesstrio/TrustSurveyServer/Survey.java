@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,6 +39,7 @@ public class Survey {
     private List<String> questions;
 
     // TODO: 현재 응답 목록 ((참여자1, 응답1), (참여자2, 응답2), ...) -> 게시자만 볼 수 있어야 하는 필드
+    private List<SurveyResponse> responses;
 
     public Survey() {}
 
@@ -63,6 +65,7 @@ public class Survey {
         this.manualClosing = manualClosing;
         this.reward = reward;
         this.questions = List.copyOf(questions);
+        this.responses = new ArrayList<>();
     }
 
     public Survey(RegisterSurveyDto dto) {
@@ -77,5 +80,6 @@ public class Survey {
         this.manualClosing = dto.isManualClosing();
         this.reward = dto.getReward();
         this.questions = List.copyOf(dto.getQuestions());
+        this.responses = new ArrayList<>();
     }
 }

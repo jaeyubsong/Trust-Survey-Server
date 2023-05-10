@@ -1,8 +1,6 @@
 package com.thetrustlesstrio.TrustSurveyServer.controller;
 
-import com.thetrustlesstrio.TrustSurveyServer.RegisterSurveyDto;
-import com.thetrustlesstrio.TrustSurveyServer.Survey;
-import com.thetrustlesstrio.TrustSurveyServer.SurveyRepository;
+import com.thetrustlesstrio.TrustSurveyServer.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -41,5 +39,26 @@ public class SurveyController {
         Survey survey = new Survey(reqBody);
         surveyRepo.save(survey);
         return survey;
+    }
+
+    @Operation(summary = "Participate single survey", description = "새로운 survey애 참여")
+    @PostMapping("participate")
+    @ResponseBody
+    public Survey participateSurvey(@RequestBody @Valid ParticipateSurveyDto reqBody) {
+        SurveyResponse surveyResponse = new SurveyResponse(reqBody.getParticipantWalletId(), reqBody.getAnswers());
+        Survey survey = surveyRepo.findById(reqBody.getSurveyId()).get();
+
+        if (survey.getMaxAttendeeCount() > survey.getResponses().size()) {
+            survey.getResponses().add(surveyResponse);
+            surveyRepo.save(survey);
+        }
+        return survey;
+    }
+
+    @Operation(summary = "Remove all surveys", description = "(테스트용) 모든 설문 데이터를 삭제")
+    @PostMapping("deleteAll")
+    @ResponseBody
+    public void deleteAllSurvey() {
+        surveyRepo.deleteAll();
     }
 }

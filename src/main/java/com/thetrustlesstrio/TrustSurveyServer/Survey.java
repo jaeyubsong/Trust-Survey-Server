@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class Survey {
     private LocalDateTime automaticClosingDatetime;
 
     private boolean manualClosing;
+    private boolean isManuallyClosed;
     private int reward;
 
     private List<String> questions;
@@ -63,6 +66,7 @@ public class Survey {
         this.maxAttendeeCount = maxAttendeeCount;
         this.automaticClosingDatetime = automaticClosingDatetime;
         this.manualClosing = manualClosing;
+        this.isManuallyClosed = false;
         this.reward = reward;
         this.questions = List.copyOf(questions);
         this.responses = new ArrayList<>();
@@ -78,8 +82,18 @@ public class Survey {
         this.maxAttendeeCount = dto.getMaxAttendeeCount();
         this.automaticClosingDatetime = dto.getAutomaticClosingDatetime();
         this.manualClosing = dto.isManualClosing();
+        this.isManuallyClosed = false;
         this.reward = dto.getReward();
         this.questions = List.copyOf(dto.getQuestions());
         this.responses = new ArrayList<>();
+    }
+
+    public boolean isClosed() {
+        if (this.manualClosing && this.isManuallyClosed) {
+            return true;
+        }
+
+        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+        return now.isAfter(this.automaticClosingDatetime);
     }
 }

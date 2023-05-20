@@ -62,6 +62,9 @@ public class SurveyController {
 
         // TODO: Close when it reaches maximum attendees?
 
+        if (survey.getResponses().stream().anyMatch(res -> res.getParticipantWalletId().equals(surveyResponse.getParticipantWalletId()))) {
+            throw new Error("Duplicated participation is now allowed");
+        }
         if (survey.getQuestions().size() != surveyResponse.getAnswers().size()) {
             throw new Error("The number of answers doesn't match with the number of questions");
         }

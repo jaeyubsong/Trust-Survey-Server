@@ -62,6 +62,9 @@ public class SurveyController {
 
         // TODO: Close when it reaches maximum attendees?
 
+        if (survey.getQuestions().size() != surveyResponse.getAnswers().size()) {
+            throw new Error("The number of answers doesn't match with the number of questions");
+        }
         if (survey.getMaxAttendeeCount() > survey.getResponses().size()) {
             survey.getResponses().add(surveyResponse);
             surveyRepo.save(survey);

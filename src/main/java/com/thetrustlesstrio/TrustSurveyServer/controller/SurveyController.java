@@ -49,12 +49,18 @@ public class SurveyController {
         return new SurveyDto(survey);
     }
 
-    @Operation(summary = "Participate single survey", description = "새로운 survey애 참여")
+    @Operation(summary = "Participate single survey", description = "새로운 survey에 참여")
     @PostMapping("participate")
     @ResponseBody
     public SurveyDto participateSurvey(@RequestBody @Valid ParticipateSurveyDto reqBody) {
         SurveyResponse surveyResponse = new SurveyResponse(reqBody.getParticipantWalletId(), reqBody.getAnswers());
         Survey survey = surveyRepo.findById(reqBody.getSurveyId()).get();
+
+        if (survey.isClosed()) {
+            throw new Error("This survey is closed.");
+        }
+
+        // TODO: Close when it reaches maximum attendees?
 
         if (survey.getMaxAttendeeCount() > survey.getResponses().size()) {
             survey.getResponses().add(surveyResponse);

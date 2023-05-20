@@ -2,17 +2,12 @@ package com.thetrustlesstrio.TrustSurveyServer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 @Getter
-@Setter
 public class SurveyDto {
     private String id;
 
@@ -34,18 +29,7 @@ public class SurveyDto {
     private boolean manualClosing;
     private boolean isManuallyClosed;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     private boolean isClosed;
-
-    public boolean isClosed() {
-        if (this.manualClosing && this.isManuallyClosed) {
-            return true;
-        }
-
-        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
-        return now.isAfter(this.automaticClosingDatetime);
-    }
 
     private int reward;
 
@@ -67,6 +51,7 @@ public class SurveyDto {
         this.automaticClosingDatetime = survey.getAutomaticClosingDatetime();
         this.manualClosing = survey.isManualClosing();
         this.isManuallyClosed = survey.isManuallyClosed();
+        this.isClosed = survey.isClosed();
         this.reward = survey.getReward();
         this.questions = List.copyOf(survey.getQuestions());
         this.responses = List.copyOf(survey.getResponses());

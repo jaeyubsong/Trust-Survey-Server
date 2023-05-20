@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,5 +86,14 @@ public class Survey {
         this.reward = dto.getReward();
         this.questions = List.copyOf(dto.getQuestions());
         this.responses = new ArrayList<>();
+    }
+
+    public boolean isClosed() {
+        if (this.manualClosing && this.isManuallyClosed) {
+            return true;
+        }
+
+        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+        return now.isAfter(this.automaticClosingDatetime);
     }
 }

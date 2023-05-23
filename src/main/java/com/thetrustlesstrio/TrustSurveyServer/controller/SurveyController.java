@@ -60,8 +60,6 @@ public class SurveyController {
             throw new Error("This survey is closed.");
         }
 
-        // TODO: Close when it reaches maximum attendees?
-
         if (survey.getResponses().stream().anyMatch(res -> res.getParticipantWalletId().equals(surveyResponse.getParticipantWalletId()))) {
             throw new Error("Duplicated participation is now allowed");
         }

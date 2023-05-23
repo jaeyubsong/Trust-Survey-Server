@@ -93,6 +93,10 @@ public class Survey {
             return true;
         }
 
+        if (this.responses.size() >= this.maxAttendeeCount) {
+            return true;
+        }
+
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
         return now.isAfter(this.automaticClosingDatetime);
     }

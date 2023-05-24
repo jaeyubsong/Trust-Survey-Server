@@ -75,6 +75,7 @@ public class SurveyController {
 
     @Operation(summary = "Close single survey manually", description = "publisher가 자신의 survey를 수동으로 종료")
     @GetMapping("survey/{id}/close")
+    @ResponseBody
     public SurveyDto closeSurvey(@PathVariable("id") @NotBlank String surveyId, @RequestParam("userWalletId") @NotBlank String userWalletId) {
         Survey survey = surveyRepo.findById(surveyId).get();
 

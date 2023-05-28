@@ -2,6 +2,8 @@ package com.thetrustlesstrio.TrustSurveyServer;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.Optional;
+
 public interface SurveyRepository extends MongoRepository<Survey, String> {
-    // TODO: Add non-ID-based operations here if necessary
+    Optional<Survey> findBySurveyId(String sid);
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 @Getter
 public class SurveyDto {
+    // surveyId, not a ObjectID
     private String id;
 
     private String publisherWalletId;
@@ -39,7 +40,7 @@ public class SurveyDto {
     private List<SurveyResponse> responses;
 
     public SurveyDto(Survey survey) {
-        this.id = survey.getId();
+        this.id = survey.getSurveyId();
 
         this.publisherWalletId = survey.getPublisherWalletId();
         this.title = survey.getTitle();

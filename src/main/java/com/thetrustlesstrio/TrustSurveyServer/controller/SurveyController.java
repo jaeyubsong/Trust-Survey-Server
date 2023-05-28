@@ -33,7 +33,7 @@ public class SurveyController {
     @GetMapping("survey/{id}")
     @ResponseBody
     public Optional<SurveyDto> getSurvey(@PathVariable("id") String id) {
-        Optional<Survey> surveyOpt = surveyRepo.findById(id);
+        Optional<Survey> surveyOpt = surveyRepo.findBySurveyId(id);
         if (surveyOpt.isEmpty()) {
             return Optional.empty();
         }
@@ -54,7 +54,7 @@ public class SurveyController {
     @ResponseBody
     public SurveyDto participateSurvey(@RequestBody @Valid ParticipateSurveyDto reqBody) {
         SurveyResponse surveyResponse = new SurveyResponse(reqBody.getParticipantWalletId(), reqBody.getAnswers());
-        Survey survey = surveyRepo.findById(reqBody.getSurveyId()).get();
+        Survey survey = surveyRepo.findBySurveyId(reqBody.getSurveyId()).get();
 
         if (survey.isClosed()) {
             throw new Error("This survey is closed.");
@@ -77,7 +77,7 @@ public class SurveyController {
     @GetMapping("survey/{id}/close")
     @ResponseBody
     public SurveyDto closeSurvey(@PathVariable("id") @NotBlank String surveyId, @RequestParam("userWalletId") @NotBlank String userWalletId) {
-        Survey survey = surveyRepo.findById(surveyId).get();
+        Survey survey = surveyRepo.findBySurveyId(surveyId).get();
 
         // TODO: Better validation to check whether requester is the publisher of the survey
         if (!survey.getPublisherWalletId().equals(userWalletId)) {

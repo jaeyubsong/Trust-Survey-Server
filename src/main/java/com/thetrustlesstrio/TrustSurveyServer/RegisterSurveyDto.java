@@ -15,6 +15,9 @@ import java.util.List;
 @Setter
 public class RegisterSurveyDto {
 
+    @NotBlank
+    private String id;
+
     // TODO: use logged in session to get publisher's identity, instead of getting it from request json
     @NotBlank
     private String publisherWalletId; // wallet id of person who registered survey

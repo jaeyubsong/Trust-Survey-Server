@@ -17,8 +17,7 @@ import java.util.List;
 @Setter
 @Document(collection = "surveys") // change it properly
 public class Survey {
-    @Id
-    private String id;
+    private String surveyId;
 
     private String publisherWalletId;
 
@@ -46,7 +45,8 @@ public class Survey {
 
     public Survey() {}
 
-    public Survey(String publisherWalletId,
+    public Survey(String surveyId,
+                  String publisherWalletId,
                   String title,
                   String summary,
                   String desc,
@@ -57,6 +57,7 @@ public class Survey {
                   boolean manualClosing,
                   int reward,
                   List<String> questions) {
+        this.surveyId = surveyId;
         this.publisherWalletId = publisherWalletId;
         this.title = title;
         this.summary = summary;
@@ -73,6 +74,7 @@ public class Survey {
     }
 
     public Survey(RegisterSurveyDto dto) {
+        this.surveyId = dto.getId();
         this.publisherWalletId = dto.getPublisherWalletId();
         this.title = dto.getTitle();
         this.summary = dto.getSummary();

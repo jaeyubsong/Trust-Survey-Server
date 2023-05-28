@@ -17,6 +17,9 @@ import java.util.List;
 @Setter
 @Document(collection = "surveys") // change it properly
 public class Survey {
+    @Id
+    private String _id; // required in DB, not exposed to external
+
     private String surveyId;
 
     private String publisherWalletId;

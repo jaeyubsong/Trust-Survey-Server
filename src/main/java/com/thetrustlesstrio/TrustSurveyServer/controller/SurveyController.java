@@ -45,6 +45,9 @@ public class SurveyController {
     @ResponseBody
     public SurveyDto registerSurvey(@RequestBody @Valid RegisterSurveyDto reqBody) {
         Survey survey = new Survey(reqBody);
+        if (surveyRepo.findBySurveyId(survey.getSurveyId()).isPresent()) {
+            throw new Error("Duplicated surveyId");
+        }
         surveyRepo.save(survey);
         return new SurveyDto(survey);
     }

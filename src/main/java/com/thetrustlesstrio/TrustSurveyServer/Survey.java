@@ -7,9 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +34,7 @@ public class Survey {
     @Schema(type = "LocalDateTime", example = "2023-05-05T13:30:01Z")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime automaticClosingDatetime;
-
-    private boolean manualClosing;
-    private boolean isManuallyClosed;
+    private boolean isManuallyClosed; // publisher 가 download 후 close 를 눌렀는지 여부
     private int reward;
 
     private List<String> questions;
@@ -69,7 +65,6 @@ public class Survey {
         this.publicAttendeeEmailPattern = publicAttendeeEmailPattern;
         this.maxAttendeeCount = maxAttendeeCount;
         this.automaticClosingDatetime = automaticClosingDatetime;
-        this.manualClosing = manualClosing;
         this.isManuallyClosed = false;
         this.reward = reward;
         this.questions = List.copyOf(questions);
@@ -86,7 +81,6 @@ public class Survey {
         this.publicAttendeeEmailPattern = dto.getPublicAttendeeEmailPattern();
         this.maxAttendeeCount = dto.getMaxAttendeeCount();
         this.automaticClosingDatetime = dto.getAutomaticClosingDatetime();
-        this.manualClosing = dto.isManualClosing();
         this.isManuallyClosed = false;
         this.reward = dto.getReward();
         this.questions = List.copyOf(dto.getQuestions());
@@ -94,15 +88,15 @@ public class Survey {
     }
 
     public boolean isClosed() {
-        if (this.manualClosing && this.isManuallyClosed) {
+        if (this.isManuallyClosed) {
             return true;
         }
 
+        // In this case, contract will close survey internally.
         if (this.responses.size() >= this.maxAttendeeCount) {
             return true;
         }
 
-        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
-        return now.isAfter(this.automaticClosingDatetime);
+        return false;
     }
 }

@@ -42,9 +42,6 @@ public class RegisterSurveyDto {
     private LocalDateTime automaticClosingDatetime;
 
     @NotNull
-    private boolean manualClosing;
-
-    @NotNull
     private int reward;
 
     @NotEmpty

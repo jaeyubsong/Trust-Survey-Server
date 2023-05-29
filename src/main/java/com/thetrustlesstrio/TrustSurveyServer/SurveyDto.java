@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -23,11 +25,9 @@ public class SurveyDto {
 
     private int maxAttendeeCount;
 
-    @Schema(type = "LocalDateTime", example = "2023-05-05T13:30:01Z")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
-    private LocalDateTime automaticClosingDatetime;
+    @Schema(type = "string", example = "yyyy-MM-dd'T'HH:mm:ss'Z' (ex. 2023-05-05T13:30:01Z)")
+    private String automaticClosingDatetime;
 
-    private boolean manualClosing;
     private boolean isManuallyClosed;
 
     private boolean isClosed;
@@ -49,8 +49,10 @@ public class SurveyDto {
         this.privateAttendeeKey = survey.getPrivateAttendeeKey();
         this.publicAttendeeEmailPattern = survey.getPublicAttendeeEmailPattern();
         this.maxAttendeeCount = survey.getMaxAttendeeCount();
-        this.automaticClosingDatetime = survey.getAutomaticClosingDatetime();
-        this.manualClosing = survey.isManualClosing();
+        this.automaticClosingDatetime = survey.getAutomaticClosingDatetime()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
         this.isManuallyClosed = survey.isManuallyClosed();
         this.isClosed = survey.isClosed();
         this.reward = survey.getReward();

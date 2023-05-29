@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,6 +66,11 @@ public class SurveyController {
             throw new Error("This survey is closed.");
         }
 
+        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
+        if (now.isAfter(survey.getAutomaticClosingDatetime())) {
+            throw new Error("Survey participation is end of due.");
+        }
+
         if (survey.getResponses().stream().anyMatch(res -> res.getParticipantWalletId().equals(surveyResponse.getParticipantWalletId()))) {
             throw new Error("Duplicated participation is now allowed");
         }
@@ -86,12 +94,6 @@ public class SurveyController {
         if (!survey.getPublisherWalletId().equals(userWalletId)) {
             // TODO: Better error handling?
             throw new Error("Only publisher can manually close this survey");
-        }
-
-        // Does the survey have manual closing option?
-        if (!survey.isManualClosing()) {
-            // TODO: Better error handling?
-            throw new Error("This survey doesn't have manual closing option");
         }
 
         if (survey.isManuallyClosed()) {
